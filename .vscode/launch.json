@@ -1,45 +1,36 @@
-// A launch configuration that compiles the extension and then opens it inside a new window
 {
-  "version": "0.2.0",
+  "version": "0.1.0",
   "configurations": [
     {
-      "type": "extensionHost",
-      "request": "launch",
-      "name": "Launch Client",
-      "runtimeExecutable": "${execPath}",
-      "args": ["--disable-extensions", "--extensionDevelopmentPath=${workspaceRoot}"],
-      "outFiles": ["${workspaceRoot}/client/out/**/*.js"],
-      "preLaunchTask": {
-        "type": "npm",
-        "script": "watch"
-      }
-    },
-    {
+      "name": "Attach",
       "type": "node",
       "request": "attach",
-      "name": "Attach to Server",
-      "port": 6009,
-      "restart": true,
-      "outFiles": ["${workspaceRoot}/server/out/**/*.js"]
+      "port": 6004,
+      "sourceMaps": true,
+      "outFiles": ["${workspaceRoot}/lib/umd/**/*.js"]
     },
     {
-      "name": "Language Server E2E Test",
-      "type": "extensionHost",
+      "name": "Unit Tests",
+      "type": "node",
       "request": "launch",
-      "runtimeExecutable": "${execPath}",
-      "args": [
-        "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceRoot}",
-        "--extensionTestsPath=${workspaceRoot}/client/out/test/index",
-        "${workspaceRoot}/client/testFixture"
-      ],
-      "outFiles": ["${workspaceRoot}/client/out/test/**/*.js"]
-    }
-  ],
-  "compounds": [
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "stopOnEntry": false,
+      "args": ["--timeout", "999999", "--colors"],
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": null,
+      "runtimeArgs": [],
+      "env": {},
+      "sourceMaps": true,
+      "outFiles": ["${workspaceRoot}/lib/umd/**/*.js"],
+      "preLaunchTask": "npm: watch"
+    },
     {
-      "name": "Client + Server",
-      "configurations": ["Launch Client", "Attach to Server"]
+      "name": "Attach Language Server",
+      "type": "node",
+      "request": "attach",
+      "port": 6004,
+      "sourceMaps": true,
+      "outFiles": ["${workspaceRoot}/server/out/**/*.js"]
     }
   ]
 }
