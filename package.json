@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "description": "The lexical analyzers basics used for analyzing code from VSCode documents",
   "main": "./out/include.js",
+  "types": "./out/include.d.ts",
   "scripts": {
     "compile": "tsc -b",
     "build": "npm run clean && npm run compile",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "test": "mocha",
     "clean": "rimraf out",
     "pretest": "npm run compile",
+    "prepublishOnly": "npm test",
+    "preversion": "",
+    "postversion": "git push && git push --tags",
+    "version": "npm run format && git add -A src",
     "watch": "tsc -w -p ./src"
   },
   "repository": {
