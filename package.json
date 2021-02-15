@@ -1,0 +1,20 @@
+{
+  "name": "bc-vscode-words",
+  "version": "1.0.0",
+  "description": "The lexical analyzers basics used for analyzing code from VSCode documents",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Blockception/BC-VSCode-Words.git"
+  },
+  "keywords": ["lexical", "basic", "vscode"],
+  "author": "Blockception Ltd",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/Blockception/BC-VSCode-Words/issues"
+  },
+  "homepage": "https://github.com/Blockception/BC-VSCode-Words#readme"
+}
