@@ -68,6 +68,13 @@ export class OffsetWordBuilder implements IWordBuilder<OffsetWord> {
 }
 
 export namespace OffsetWord {
+  /**
+   *Parses words from the given data
+   * @param text The text to turn into words
+   * @param regex The pattern to apply to the text
+   * @param Calculator The calculator to use
+   * @param uri The uri of the location
+   */
   export function ParseFromRegex(text: string | TextDocument, regex: RegExp, offset: number = 0): OffsetWord[] {
     let Builder = new OffsetWordBuilder(offset);
 
@@ -79,6 +86,11 @@ export namespace OffsetWord {
     return Builder.BuildFinal();
   }
 
+  /**
+   *Parses words from the given data
+   * @param doc The text document to parse
+   * @param wordcreation The function that will create words and adds them into the builder
+   */
   export function Parse(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): OffsetWord[] {
     let Builder = new OffsetWordBuilder();
 

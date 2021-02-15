@@ -79,6 +79,13 @@ export class RangedWordBuilder implements IWordBuilder<RangedWord>, IRangeWordBu
 }
 
 export namespace RangedWord {
+  /**
+   *Parses words from the given data
+   * @param text The text to turn into words
+   * @param regex The pattern to apply to the text
+   * @param Calculator The calculator to use
+   * @param uri The uri of the location
+   */
   export function ParseFromRegex(text: string | TextDocument, regex: RegExp, Calculator: PositionCalculator): RangedWord[] {
     let Builder = new RangedWordBuilder(Calculator);
 
@@ -90,6 +97,11 @@ export namespace RangedWord {
     return Builder.BuildFinal();
   }
 
+  /**
+   *Parses words from the given data
+   * @param doc The text document to parse
+   * @param regex The pattern to apply to the text
+   */
   export function ParseFromRegexDoc(doc: TextDocument, regex: RegExp): RangedWord[] {
     let Calculator: PositionCalculator = PositionCalculator.Wrap(doc);
     let Builder = new RangedWordBuilder(Calculator);
@@ -99,6 +111,11 @@ export namespace RangedWord {
     return Builder.BuildFinal();
   }
 
+  /**
+   *Parses words from the given data
+   * @param doc The text document to parse
+   * @param wordcreation The function that will create words and adds them into the builder
+   */
   export function Parse(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): RangedWord[] {
     let Builder = new RangedWordBuilder(PositionCalculator.Wrap(doc));
 

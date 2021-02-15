@@ -89,6 +89,13 @@ export class LocationWordBuilder implements IWordBuilder<LocationWord>, IRangeWo
 }
 
 export namespace LocationWord {
+  /**
+   *Parses words from the given data
+   * @param text The text to turn into words
+   * @param regex The pattern to apply to the text
+   * @param Calculator The calculator to use
+   * @param uri The uri of the location
+   */
   export function ParseFromRegex(text: string, regex: RegExp, Calculator: PositionCalculator, uri: string): LocationWord[] {
     let Builder = new LocationWordBuilder(Calculator, uri);
 
@@ -96,6 +103,11 @@ export namespace LocationWord {
     return Builder.BuildFinal();
   }
 
+  /**
+   *Parses words from the given data
+   * @param doc The text document to parse
+   * @param regex The pattern to apply to the text
+   */
   export function ParseFromRegexDoc(doc: TextDocument, regex: RegExp): LocationWord[] {
     let Calculator = PositionCalculator.Wrap(doc);
     let Builder = new LocationWordBuilder(Calculator, doc.uri);
@@ -105,6 +117,11 @@ export namespace LocationWord {
     return Builder.BuildFinal();
   }
 
+  /**
+   *Parses words from the given data
+   * @param doc The text document to parse
+   * @param wordcreation The function that will create words and adds them into the builder
+   */
   export function Parse(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): LocationWord[] {
     let Builder = new LocationWordBuilder(PositionCalculator.Wrap(doc), doc.uri);
 
