@@ -30,9 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 import { Location } from "vscode-languageserver";
 import { Range, TextDocument } from "vscode-languageserver-textdocument";
 import { PositionCalculator } from "../Position/include";
-import { IBaseWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
+import { IBaseWordBuilder, IRangeWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
 import { IWord } from "./Interfaces/IWord";
-import { RegularExpression } from "./Regexp";
+import { RegularExpression } from "../RegularExpression/CreateWords";
 
 /**
  *A word that records its range and location (document uri)
@@ -40,6 +40,7 @@ import { RegularExpression } from "./Regexp";
 export class LocationWord implements IWord {
   /**The text of the word*/
   public text: string;
+  /**The location of the word*/
   public location: Location;
 
   constructor(text: string, uri: string, range: Range) {
@@ -51,7 +52,7 @@ export class LocationWord implements IWord {
 /**
  * A builder for location words
  */
-export class LocationWordBuilder implements IWordBuilder<LocationWord> {
+export class LocationWordBuilder implements IWordBuilder<LocationWord>, IRangeWordBuilder {
   private Words: LocationWord[];
   private Calculator: PositionCalculator;
   private uri: string;
@@ -62,15 +63,26 @@ export class LocationWordBuilder implements IWordBuilder<LocationWord> {
     this.uri = uri;
   }
 
+  /**
+   * Add the given text as a word to the internal list, starting at the given offset
+   * @param text The word text
+   * @param offset The offset where the word was found
+   */
   Add(text: string, offset: number): void {
     let range = this.Calculator.RangeOf(offset, offset + text.length);
     this.Words.push(new LocationWord(text, this.uri, range));
   }
 
+  /**
+   * Add the given text as a word to the internal list, starting at the given offset
+   * @param text The word text
+   * @param range The range of the text
+   */
   AddRange(text: string, range: Range): void {
     this.Words.push(new LocationWord(text, this.uri, range));
   }
 
+  /**Builds the final product of a word builder into the specified words array*/
   BuildFinal(): LocationWord[] {
     return this.Words;
   }

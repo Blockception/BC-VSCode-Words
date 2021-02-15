@@ -1,4 +1,4 @@
-import { IBaseWordBuilder } from "./Interfaces/include";
+import { IBaseWordBuilder } from "../Words/Interfaces/include";
 
 /*BSD 3-Clause License
 
@@ -30,6 +30,12 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 export namespace RegularExpression {
+  /**
+   * Adds all matches that are found as words into the specified builder
+   * @param text The text to search through
+   * @param regex The regex pattern to process
+   * @param Builder The build to add words to
+   */
   export function CreateWords(text: string, regex: RegExp, Builder: IBaseWordBuilder): void {
     let Matches = text.match(regex);
 

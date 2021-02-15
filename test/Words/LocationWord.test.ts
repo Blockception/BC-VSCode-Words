@@ -2,7 +2,7 @@ import * as assert from "assert";
 import "mocha";
 import { LocationWord } from "../../src/Words/include";
 import { IBaseWordBuilder } from "../../src/Words/Interfaces/include";
-import { RegularExpression } from "../../src/Words/Regexp";
+import { RegularExpression } from "../../src/RegularExpression/CreateWords";
 import * as Samples from "../Samples/Samples.test";
 
 const Pattern = new RegExp(/([^ \t\r\n]+)+/gi);

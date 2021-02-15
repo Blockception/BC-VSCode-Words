@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { IBaseWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
 import { IWord } from "./Interfaces/IWord";
-import { RegularExpression } from "./Regexp";
+import { RegularExpression } from "../RegularExpression/CreateWords";
 
 export class OffsetWord implements IWord {
   /**The text of the word*/
@@ -52,10 +52,16 @@ export class OffsetWordBuilder implements IWordBuilder<OffsetWord> {
     this.Offset = Offset;
   }
 
+  /**
+   * Add the given text as a word to the internal list, starting at the given offset
+   * @param text The word text
+   * @param offset The offset where the word was found
+   */
   Add(text: string, offset: number): void {
     this.Words.push(new OffsetWord(text, offset + this.Offset));
   }
 
+  /**Builds the final product of a word builder into the specified words array*/
   BuildFinal(): OffsetWord[] {
     return this.Words;
   }

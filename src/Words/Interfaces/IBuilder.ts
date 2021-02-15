@@ -28,6 +28,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 import { IWord } from "./IWord";
+import { Range } from "vscode-languageserver-textdocument";
 
 /**
  * The interface of a basic word builder
@@ -39,6 +40,18 @@ export interface IBaseWordBuilder {
    * @param offset The offset where the word was found
    */
   Add(text: string, offset: number): void;
+}
+
+/**
+ * The interface of a basic word builder
+ */
+export interface IRangeWordBuilder {
+  /**
+   * Add the given text as a word to the internal list, starting at the given offset
+   * @param text The word text
+   * @param range The range of the text
+   */
+  AddRange(text: string, range: Range): void;
 }
 
 /**

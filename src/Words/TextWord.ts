@@ -41,6 +41,7 @@ export class TextWordBuilder implements IBaseWordBuilder {
     this.Words.push(text);
   }
 
+  /**Builds the final product of a word builder into the specified words array*/
   BuildFinal(): string[] {
     return this.Words;
   }

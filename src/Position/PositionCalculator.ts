@@ -39,6 +39,9 @@ export namespace PositionCalculator {
   }
 }
 
+/**
+ *The class that wraps around TextDocuments and into a PositionCalculator
+ */
 class DocumentCalculator implements PositionCalculator {
   private doc;
 
@@ -46,10 +49,19 @@ class DocumentCalculator implements PositionCalculator {
     this.doc = doc;
   }
 
+  /**
+   * Calculates the given position of the given offset
+   * @param offset The offset of the item in the text;
+   */
   PositionAt(offset: number): Position {
     return this.doc.positionAt(offset);
   }
 
+  /**
+   * Calculates the given range of the given start and end index
+   * @param startindex The start offset of the item in the text;
+   * @param endindex The end offset of the item in the text;
+   */
   RangeOf(startindex: number, endindex: number): Range {
     return {
       start: this.PositionAt(startindex),
@@ -58,6 +70,9 @@ class DocumentCalculator implements PositionCalculator {
   }
 }
 
+/**
+ *The class that wraps around texts and into a PositionCalculator
+ */
 class TextCalculator implements PositionCalculator {
   private FirstLineOffset: number;
   private LineOffset: number;
@@ -71,6 +86,10 @@ class TextCalculator implements PositionCalculator {
     this.LineOffsets = CalculateLineOffset(text, FirstLineOffset);
   }
 
+  /**
+   * Calculates the given position of the given offset
+   * @param offset The offset of the item in the text;
+   */
   PositionAt(offset: number): Position {
     let LineIndex = 0;
     let LO = 0;

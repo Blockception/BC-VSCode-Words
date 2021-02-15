@@ -29,9 +29,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 import { Range, TextDocument } from "vscode-languageserver-textdocument";
 import { PositionCalculator } from "../Position/include";
-import { IBaseWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
+import { IBaseWordBuilder, IRangeWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
 import { IWord } from "./Interfaces/IWord";
-import { RegularExpression } from "./Regexp";
+import { RegularExpression } from "../RegularExpression/CreateWords";
 
 export class RangedWord implements IWord {
   /**The text of the word*/
@@ -44,7 +44,7 @@ export class RangedWord implements IWord {
   }
 }
 
-export class RangedWordBuilder implements IWordBuilder<RangedWord> {
+export class RangedWordBuilder implements IWordBuilder<RangedWord>, IRangeWordBuilder {
   private Words: RangedWord[];
   private Calculator: PositionCalculator;
 
@@ -53,15 +53,26 @@ export class RangedWordBuilder implements IWordBuilder<RangedWord> {
     this.Calculator = Calculator;
   }
 
+  /**
+   * Add the given text as a word to the internal list, starting at the given offset
+   * @param text The word text
+   * @param offset The offset where the word was found
+   */
   Add(text: string, offset: number): void {
     let range = this.Calculator.RangeOf(offset, offset + text.length);
     this.Words.push(new RangedWord(text, range));
   }
 
+  /**
+   * Add the given text as a word to the internal list, starting at the given offset
+   * @param text The word text
+   * @param range The range of the text
+   */
   AddRange(text: string, range: Range): void {
     this.Words.push(new RangedWord(text, range));
   }
 
+  /**Builds the final product of a word builder into the specified words array*/
   BuildFinal(): RangedWord[] {
     return this.Words;
   }
