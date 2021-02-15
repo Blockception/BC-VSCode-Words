@@ -10,6 +10,25 @@ export class OffsetWord implements IWord {
   }
 }
 
-export declare namespace OffsetWord {
-  export function Parse(text: string, offset: number = 0): OffsetWord[] {}
+export namespace OffsetWord {
+  export function ParseFromRegex(text: string, regex: RegExp, offset: number = 0): OffsetWord[] {
+    let Out: OffsetWord[] = [];
+    let Matches = text.match(regex);
+
+    //If any matches are found
+    if (Matches) {
+      let StartIndex = 0;
+
+      for (let I = 0; I < Matches.length; I++) {
+        const m = Matches[I];
+
+        let Index = text.indexOf(m, StartIndex);
+        StartIndex = Math.max(Index, StartIndex) + text.length;
+
+        Out.push(new OffsetWord(m, Index));
+      }
+    }
+
+    return Out;
+  }
 }

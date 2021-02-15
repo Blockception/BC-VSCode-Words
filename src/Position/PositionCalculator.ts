@@ -1,18 +1,42 @@
 import { Position, Range, TextDocument } from "vscode-languageserver-textdocument";
 import { CalculateLineOffset } from "../Functions/String";
 
+/**
+ *An object that can calculate the position / range of an given offset
+ */
 export interface PositionCalculator {
+  /**
+   * Calculates the given position of the given offset
+   * @param offset The offset of the item in the text;
+   */
   PositionAt(offset: number): Position;
 
+  /**
+   * Calculates the given range of the given start and end index
+   * @param startindex The start offset of the item in the text;
+   * @param endindex The end offset of the item in the text;
+   */
   RangeOf(startindex: number, endindex: number): Range;
 }
 
 export namespace PositionCalculator {
-  export function Create(doc: TextDocument): PositionCalculator {
+  /**
+   * Creates a PositionCalculator around a given document
+   * @param doc
+   */
+  export function Wrap(doc: TextDocument): PositionCalculator {
     return new DocumentCalculator(doc);
   }
 
-  export function Create(text: string, FirstLineOffset: number = 0, LineOffset: number = 0): PositionCalculator {}
+  /**
+   * Creates a PositionCalculator around a given text
+   * @param text The text to create a calculator for
+   * @param FirstLineOffset The text offset of the first line. Usually indicates where the text starts from in the line itself
+   * @param LineOffset The line offset of the text. Incase text from line 3 to the end has been grabbed.
+   */
+  export function Create(text: string, FirstLineOffset: number = 0, LineOffset: number = 0): PositionCalculator {
+    return new TextCalculator(text, FirstLineOffset, LineOffset);
+  }
 }
 
 class DocumentCalculator implements PositionCalculator {
