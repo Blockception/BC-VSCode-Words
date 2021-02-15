@@ -2,9 +2,9 @@
   "name": "bc-vscode-words",
   "version": "1.0.0",
   "description": "The lexical analyzers basics used for analyzing code from VSCode documents",
-  "main": "index.js",
+  "main": "include.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc -b"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,9 @@
     "url": "https://github.com/Blockception/BC-VSCode-Words/issues"
   },
   "homepage": "https://github.com/Blockception/BC-VSCode-Words#readme",
+  "dependencies": {
+    "vscode-languageserver-textdocument": "^1.0.1"
+  },
   "devDependencies": {
     "typescript": "^4.1.5"
   }
