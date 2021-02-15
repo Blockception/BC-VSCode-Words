@@ -2,9 +2,14 @@
   "name": "bc-vscode-words",
   "version": "1.0.0",
   "description": "The lexical analyzers basics used for analyzing code from VSCode documents",
-  "main": "include.js",
+  "main": "./out/include.js",
   "scripts": {
-    "build": "tsc -b"
+    "compile": "tsc -b",
+    "build": "npm run clean && npm run compile",
+    "test": "mocha",
+    "clean": "rimraf out",
+    "pretest": "npm run compile",
+    "watch": "tsc -w -p ./src"
   },
   "repository": {
     "type": "git",
@@ -16,16 +21,25 @@
     "vscode"
   ],
   "author": "Blockception Ltd",
-  "license": "",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/Blockception/BC-VSCode-Words/issues"
   },
   "homepage": "https://github.com/Blockception/BC-VSCode-Words#readme",
-  "files": ["lib/**/*"],
+  "files": [
+    "out/**/*",
+    "!out/test"
+  ],
   "dependencies": {
+    "@types/mocha": "^8.0.4",
+    "@types/node": "^10.12.21",
+    "vscode-languageserver": "^7.0.0",
     "vscode-languageserver-textdocument": "^1.0.1"
   },
   "devDependencies": {
+    "mocha": "^8.3.0",
+    "rimraf": "^3.0.2",
+    "ts-node": "^9.1.1",
     "typescript": "^4.1.5"
   }
 }
