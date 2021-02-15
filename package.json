@@ -21,6 +21,7 @@
     "url": "https://github.com/Blockception/BC-VSCode-Words/issues"
   },
   "homepage": "https://github.com/Blockception/BC-VSCode-Words#readme",
+  "files": ["lib/**/*"],
   "dependencies": {
     "vscode-languageserver-textdocument": "^1.0.1"
   },
