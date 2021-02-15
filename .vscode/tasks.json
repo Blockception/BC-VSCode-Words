@@ -2,6 +2,14 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "type": "npm",
+      "script": "build",
+      "isBackground": false,
+      "group": "build",
+      "presentation": { "reveal": "silent", "panel": "dedicated" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
       "type": "shell",
       "label": "Format workspace",
       "command": "Powershell.exe -executionpolicy remotesigned -File ./scripts/format_documents.ps1",
