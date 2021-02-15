@@ -1,3 +1,5 @@
+import { IBaseWordBuilder } from "./Interfaces/include";
+
 /*BSD 3-Clause License
 
 Copyright (c) 2021, Blockception Ltd
@@ -27,57 +29,22 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
-import { TextDocument } from "vscode-languageserver-textdocument";
-import { IBaseWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
-import { IWord } from "./Interfaces/IWord";
-import { RegularExpression } from "./Regexp";
+export namespace RegularExpression {
+  export function CreateWords(text: string, regex: RegExp, Builder: IBaseWordBuilder): void {
+    let Matches = text.match(regex);
 
-export class OffsetWord implements IWord {
-  /**The text of the word*/
-  public text: string;
-  public offset: number;
+    //If any matches are found
+    if (Matches) {
+      let StartIndex = 0;
 
-  constructor(text: string, offset: number = 0) {
-    this.text = text;
-    this.offset = offset;
-  }
-}
+      for (let I = 0; I < Matches.length; I++) {
+        const m = Matches[I];
 
-export class OffsetWordBuilder implements IWordBuilder<OffsetWord> {
-  private Words: OffsetWord[];
-  private Offset: number;
+        let Index = text.indexOf(m, StartIndex);
+        StartIndex = Math.max(Index, StartIndex) + m.length;
 
-  constructor(Offset: number = 0) {
-    this.Words = [];
-    this.Offset = Offset;
-  }
-
-  Add(text: string, offset: number): void {
-    this.Words.push(new OffsetWord(text, offset + this.Offset));
-  }
-
-  BuildFinal(): OffsetWord[] {
-    return this.Words;
-  }
-}
-
-export namespace OffsetWord {
-  export function ParseFromRegex(text: string | TextDocument, regex: RegExp, offset: number = 0): OffsetWord[] {
-    let Builder = new OffsetWordBuilder(offset);
-
-    if (typeof text !== "string") {
-      text = text.getText();
+        Builder.Add(m, Index);
+      }
     }
-
-    RegularExpression.CreateWords(text, regex, Builder);
-    return Builder.BuildFinal();
-  }
-
-  export function Parse(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): OffsetWord[] {
-    let Builder = new OffsetWordBuilder();
-
-    let text = doc.getText();
-    wordcreation(text, Builder);
-    return Builder.BuildFinal();
   }
 }

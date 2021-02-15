@@ -28,53 +28,38 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { IBaseWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
-import { IWord } from "./Interfaces/IWord";
-import { RegularExpression } from "./Regexp";
+import { IBaseWordBuilder } from "./Interfaces/IBuilder";
 
-export class OffsetWord implements IWord {
-  /**The text of the word*/
-  public text: string;
-  public offset: number;
+export class TextWordBuilder implements IBaseWordBuilder {
+  private Words: string[];
 
-  constructor(text: string, offset: number = 0) {
-    this.text = text;
-    this.offset = offset;
-  }
-}
-
-export class OffsetWordBuilder implements IWordBuilder<OffsetWord> {
-  private Words: OffsetWord[];
-  private Offset: number;
-
-  constructor(Offset: number = 0) {
+  constructor() {
     this.Words = [];
-    this.Offset = Offset;
   }
 
   Add(text: string, offset: number): void {
-    this.Words.push(new OffsetWord(text, offset + this.Offset));
+    this.Words.push(text);
   }
 
-  BuildFinal(): OffsetWord[] {
+  BuildFinal(): string[] {
     return this.Words;
   }
 }
 
-export namespace OffsetWord {
-  export function ParseFromRegex(text: string | TextDocument, regex: RegExp, offset: number = 0): OffsetWord[] {
-    let Builder = new OffsetWordBuilder(offset);
+export namespace TextWord {
+  export function ParseFromRegex(text: string, regex: RegExp): string[] {
+    let Matches = text.match(regex);
 
-    if (typeof text !== "string") {
-      text = text.getText();
+    //If any matches are found
+    if (Matches) {
+      return Matches;
     }
 
-    RegularExpression.CreateWords(text, regex, Builder);
-    return Builder.BuildFinal();
+    return [];
   }
 
-  export function Parse(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): OffsetWord[] {
-    let Builder = new OffsetWordBuilder();
+  export function Parse(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): string[] {
+    let Builder = new TextWordBuilder();
 
     let text = doc.getText();
     wordcreation(text, Builder);
