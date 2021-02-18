@@ -30,3 +30,4 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 export * from "./Functions/include";
 export * from "./Position/include";
 export * from "./Words/include";
+export * from "./Words/Interfaces/include";

@@ -69,7 +69,7 @@ export class LocationWordBuilder implements IWordBuilder<LocationWord>, IRangeWo
    * @param offset The offset where the word was found
    */
   Add(text: string, offset: number): void {
-    let range = this.Calculator.RangeOf(offset, offset + text.length);
+    let range = this.Calculator.rangeOf(offset, offset + text.length);
     this.Words.push(new LocationWord(text, this.uri, range));
   }
 
@@ -122,10 +122,27 @@ export namespace LocationWord {
    * @param doc The text document to parse
    * @param wordcreation The function that will create words and adds them into the builder
    */
-  export function Parse(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): LocationWord[] {
+  export function ParseDoc(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): LocationWord[] {
     let Builder = new LocationWordBuilder(PositionCalculator.Wrap(doc), doc.uri);
 
     let text = doc.getText();
+    wordcreation(text, Builder);
+    return Builder.BuildFinal();
+  }
+
+  /**
+   *Parses words from the given data
+   * @param doc The text document to parse
+   * @param wordcreation The function that will create words and adds them into the builder
+   */
+  export function Parse(
+    text: string,
+    Calculator: PositionCalculator,
+    uri: string,
+    wordcreation: (text: string, builder: IBaseWordBuilder) => void
+  ): LocationWord[] {
+    let Builder = new LocationWordBuilder(Calculator, uri);
+
     wordcreation(text, Builder);
     return Builder.BuildFinal();
   }

@@ -59,11 +59,12 @@ export namespace TextWord {
     return [];
   }
 
-  export function Parse(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): string[] {
+  export function Parse(doc: string | TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): string[] {
     let Builder = new TextWordBuilder();
 
-    let text = doc.getText();
-    wordcreation(text, Builder);
+    if (typeof doc !== "string") doc = doc.getText();
+
+    wordcreation(doc, Builder);
     return Builder.BuildFinal();
   }
 }

@@ -9,17 +9,36 @@ export interface PositionCalculator {
    * Calculates the given position of the given offset
    * @param offset The offset of the item in the text;
    */
-  PositionAt(offset: number): Position;
+  positionAt(offset: number): Position;
 
   /**
    * Calculates the given range of the given start and end index
    * @param startindex The start offset of the item in the text;
    * @param endindex The end offset of the item in the text;
    */
-  RangeOf(startindex: number, endindex: number): Range;
+  rangeOf(startindex: number, endindex: number): Range;
+
+  /**
+   * Calculates the given offset of a position
+   * @param pos The position to retrieve of number of
+   */
+  offsetAt(pos: Position): number;
 }
 
 export namespace PositionCalculator {
+  /**
+   * Check if the given object is a PositionCalculator
+   */
+  export function is(value: any): value is PositionCalculator {
+    if (value) {
+      let temp = value as PositionCalculator;
+
+      if (temp.positionAt !== undefined && temp.rangeOf !== undefined) return true;
+    }
+
+    return false;
+  }
+
   /**
    * Creates a PositionCalculator around a given document
    * @param doc
@@ -53,7 +72,7 @@ class DocumentCalculator implements PositionCalculator {
    * Calculates the given position of the given offset
    * @param offset The offset of the item in the text;
    */
-  PositionAt(offset: number): Position {
+  positionAt(offset: number): Position {
     return this.doc.positionAt(offset);
   }
 
@@ -62,11 +81,19 @@ class DocumentCalculator implements PositionCalculator {
    * @param startindex The start offset of the item in the text;
    * @param endindex The end offset of the item in the text;
    */
-  RangeOf(startindex: number, endindex: number): Range {
+  rangeOf(startindex: number, endindex: number): Range {
     return {
-      start: this.PositionAt(startindex),
-      end: this.PositionAt(endindex),
+      start: this.positionAt(startindex),
+      end: this.positionAt(endindex),
     };
+  }
+
+  /**
+   * Calculates the given offset of a position
+   * @param pos The position to retrieve of number of
+   */
+  offsetAt(pos: Position): number {
+    return this.doc.offsetAt(pos);
   }
 }
 
@@ -90,7 +117,7 @@ class TextCalculator implements PositionCalculator {
    * Calculates the given position of the given offset
    * @param offset The offset of the item in the text;
    */
-  PositionAt(offset: number): Position {
+  positionAt(offset: number): Position {
     let LineIndex = 0;
     let LO = 0;
 
@@ -121,10 +148,21 @@ class TextCalculator implements PositionCalculator {
     return Out;
   }
 
-  RangeOf(startindex: number, endindex: number): Range {
+  rangeOf(startindex: number, endindex: number): Range {
     return {
-      start: this.PositionAt(startindex),
-      end: this.PositionAt(endindex),
+      start: this.positionAt(startindex),
+      end: this.positionAt(endindex),
     };
+  }
+
+  /**
+   * Calculates the given offset of a position
+   * @param pos The position to retrieve of number of
+   */
+  offsetAt(pos: Position): number {
+    if (pos.line <= 0) return pos.character;
+
+    var Offset = this.LineOffsets[pos.line - 1];
+    return Offset + pos.character;
   }
 }
