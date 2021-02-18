@@ -71,8 +71,12 @@ export namespace Conversion {
   }
 
   export namespace Offset {
-    export function FromLocation(word: LocationWord): OffsetWord {
-      return new RangedWord(word.text, word.location.range);
+    export function FromLocation(word: LocationWord, doc: TextDocument | PositionCalculator): OffsetWord {
+      return new OffsetWord(word.text, doc.offsetAt(word.location.range.start));
+    }
+
+    export function FromRange(word: RangedWord, doc: TextDocument | PositionCalculator): OffsetWord {
+      return new OffsetWord(word.text, doc.offsetAt(word.range.start));
     }
   }
 }

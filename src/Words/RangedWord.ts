@@ -59,7 +59,7 @@ export class RangedWordBuilder implements IWordBuilder<RangedWord>, IRangeWordBu
    * @param offset The offset where the word was found
    */
   Add(text: string, offset: number): void {
-    let range = this.Calculator.RangeOf(offset, offset + text.length);
+    let range = this.Calculator.rangeOf(offset, offset + text.length);
     this.Words.push(new RangedWord(text, range));
   }
 
