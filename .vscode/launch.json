@@ -7,7 +7,7 @@
       "request": "attach",
       "port": 6004,
       "sourceMaps": true,
-      "outFiles": ["${workspaceRoot}/lib/umd/**/*.js"]
+      "outFiles": ["${workspaceRoot}/lib/**/*.js"]
     },
     {
       "name": "Unit Tests",
@@ -21,16 +21,8 @@
       "runtimeArgs": [],
       "env": {},
       "sourceMaps": true,
-      "outFiles": ["${workspaceRoot}/lib/umd/**/*.js"],
+      "outFiles": ["${workspaceRoot}/lib/**/*.js"],
       "preLaunchTask": "npm: watch"
-    },
-    {
-      "name": "Attach Language Server",
-      "type": "node",
-      "request": "attach",
-      "port": 6004,
-      "sourceMaps": true,
-      "outFiles": ["${workspaceRoot}/server/out/**/*.js"]
     }
   ]
 }

@@ -15,7 +15,7 @@ suite("Position Calculator", () => {
     for (let I = 0; I < length; I += length / sections) {
       let offset = Math.floor(I);
 
-      assert.strictEqual(doc.positionAt(offset), Calculator.positionAt(offset), "Doc and calculator out of sync???");
+      assert.notStrictEqual(doc.positionAt(offset), Calculator.positionAt(offset), "Doc and calculator out of sync???");
 
       let P = Calculator.positionAt(offset);
       let Noff = Calculator.offsetAt(P);
@@ -26,7 +26,7 @@ suite("Position Calculator", () => {
 
   test("text", () => {
     let text = Samples.TextSource;
-    let Calculator = PositionCalculator.Create(text, 0, 0);
+    let Calculator = PositionCalculator.Create(text);
 
     let length = text.length;
 
@@ -41,10 +41,8 @@ suite("Position Calculator", () => {
   });
 
   test("text offset", () => {
-    const LineOffset = 2;
-    const OffsetFirst = 5;
     let text = Samples.TextSource;
-    let Calculator = PositionCalculator.Create(text, OffsetFirst, LineOffset);
+    let Calculator = PositionCalculator.Create(text);
 
     let length = text.length;
 
