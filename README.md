@@ -1,5 +1,12 @@
 # Blockception Vscode Words
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/vscode-languageserver">
+  	<img alt="npm" src="https://img.shields.io/npm/v/bc-vscode-words">
+		<img alt="npm" src="https://img.shields.io/npm/dt/bc-vscode-words">
+  </a>
+</p>
+
 The lexical analyzers basics used for analyzing code from VSCode documents
 
 ## Examples
