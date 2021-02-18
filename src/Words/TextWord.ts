@@ -28,6 +28,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 import { TextDocument } from "vscode-languageserver-textdocument";
+import { WordCreation } from "./Creation";
 import { IBaseWordBuilder } from "./Interfaces/IBuilder";
 
 export class TextWordBuilder implements IBaseWordBuilder {
@@ -48,23 +49,31 @@ export class TextWordBuilder implements IBaseWordBuilder {
 }
 
 export namespace TextWord {
-  export function ParseFromRegex(text: string, regex: RegExp): string[] {
-    let Matches = text.match(regex);
-
-    //If any matches are found
-    if (Matches) {
-      return Matches;
-    }
-
-    return [];
-  }
-
-  export function Parse(doc: string | TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): string[] {
+  /**
+   *
+   * @param text
+   * @param func
+   */
+  export function Parse(text: string | TextDocument, func: WordCreation): string[] {
     let Builder = new TextWordBuilder();
 
-    if (typeof doc !== "string") doc = doc.getText();
+    if (typeof text !== "string") text = text.getText();
 
-    wordcreation(doc, Builder);
+    WordCreation.Execute(text, Builder, func);
+    return Builder.BuildFinal();
+  }
+
+  /**
+   *
+   * @param text
+   * @param func
+   */
+  export function ParseRange(text: string | TextDocument, startindex: number, endindex: number, func: WordCreation): string[] {
+    let Builder = new TextWordBuilder();
+
+    if (typeof text !== "string") text = text.getText();
+
+    WordCreation.ExecuteRange(text, startindex, endindex, Builder, func);
     return Builder.BuildFinal();
   }
 }

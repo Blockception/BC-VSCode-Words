@@ -33,6 +33,7 @@ import { PositionCalculator } from "../Position/include";
 import { IBaseWordBuilder, IRangeWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
 import { IWord } from "./Interfaces/IWord";
 import { RegularExpression } from "../RegularExpression/CreateWords";
+import { WordCreation } from "./Creation";
 
 /**
  *A word that records its range and location (document uri)
@@ -89,61 +90,66 @@ export class LocationWordBuilder implements IWordBuilder<LocationWord>, IRangeWo
 }
 
 export namespace LocationWord {
-  /**
-   *Parses words from the given data
-   * @param text The text to turn into words
-   * @param regex The pattern to apply to the text
-   * @param Calculator The calculator to use
-   * @param uri The uri of the location
-   */
-  export function ParseFromRegex(text: string, regex: RegExp, Calculator: PositionCalculator, uri: string): LocationWord[] {
-    let Builder = new LocationWordBuilder(Calculator, uri);
+  export namespace Document {
+    /**
+     *
+     * @param doc
+     * @param func
+     */
+    export function Parse(doc: TextDocument, func: WordCreation): LocationWord[] {
+      let Calculator = PositionCalculator.Wrap(doc);
+      let text = doc.getText();
 
-    RegularExpression.CreateWords(text, regex, Builder);
-    return Builder.BuildFinal();
+      let Builder = new LocationWordBuilder(Calculator, doc.uri);
+
+      WordCreation.Execute(text, Builder, func);
+      return Builder.BuildFinal();
+    }
+
+    /**
+     *
+     * @param doc
+     * @param startindex
+     * @param endindex
+     * @param func
+     */
+    export function ParseRange(doc: TextDocument, startindex: number, endindex: number, func: WordCreation): LocationWord[] {
+      let Calculator = PositionCalculator.Wrap(doc);
+      let text = doc.getText();
+
+      let Builder = new LocationWordBuilder(Calculator, doc.uri);
+
+      WordCreation.ExecuteRange(text, startindex, endindex, Builder, func);
+      return Builder.BuildFinal();
+    }
   }
 
-  /**
-   *Parses words from the given data
-   * @param doc The text document to parse
-   * @param regex The pattern to apply to the text
-   */
-  export function ParseFromRegexDoc(doc: TextDocument, regex: RegExp): LocationWord[] {
-    let Calculator = PositionCalculator.Wrap(doc);
-    let Builder = new LocationWordBuilder(Calculator, doc.uri);
-    let text = doc.getText();
+  export namespace Text {
+    /**
+     *
+     * @param doc
+     * @param func
+     */
+    export function Parse(text: string, uri: string, func: WordCreation): LocationWord[] {
+      let Calculator = PositionCalculator.Create(text);
 
-    RegularExpression.CreateWords(text, regex, Builder);
-    return Builder.BuildFinal();
-  }
+      let Builder = new LocationWordBuilder(Calculator, uri);
 
-  /**
-   *Parses words from the given data
-   * @param doc The text document to parse
-   * @param wordcreation The function that will create words and adds them into the builder
-   */
-  export function ParseDoc(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): LocationWord[] {
-    let Builder = new LocationWordBuilder(PositionCalculator.Wrap(doc), doc.uri);
+      WordCreation.Execute(text, Builder, func);
+      return Builder.BuildFinal();
+    }
 
-    let text = doc.getText();
-    wordcreation(text, Builder);
-    return Builder.BuildFinal();
-  }
+    /**
+     *
+     * @param text
+     * @param func
+     */
+    export function ParseRange(text: string, uri: string, startindex: number, endindex: number, func: WordCreation): LocationWord[] {
+      let Calculator = PositionCalculator.Create(text);
 
-  /**
-   *Parses words from the given data
-   * @param doc The text document to parse
-   * @param wordcreation The function that will create words and adds them into the builder
-   */
-  export function Parse(
-    text: string,
-    Calculator: PositionCalculator,
-    uri: string,
-    wordcreation: (text: string, builder: IBaseWordBuilder) => void
-  ): LocationWord[] {
-    let Builder = new LocationWordBuilder(Calculator, uri);
-
-    wordcreation(text, Builder);
-    return Builder.BuildFinal();
+      let Builder = new LocationWordBuilder(Calculator, uri);
+      WordCreation.ExecuteRange(text, startindex, endindex, Builder, func);
+      return Builder.BuildFinal();
+    }
   }
 }

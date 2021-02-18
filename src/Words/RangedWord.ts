@@ -29,9 +29,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 import { Range, TextDocument } from "vscode-languageserver-textdocument";
 import { PositionCalculator } from "../Position/include";
-import { IBaseWordBuilder, IRangeWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
+import { IRangeWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
 import { IWord } from "./Interfaces/IWord";
-import { RegularExpression } from "../RegularExpression/CreateWords";
+import { WordCreation } from "./Creation";
 
 export class RangedWord implements IWord {
   /**The text of the word*/
@@ -80,47 +80,44 @@ export class RangedWordBuilder implements IWordBuilder<RangedWord>, IRangeWordBu
 
 export namespace RangedWord {
   /**
-   *Parses words from the given data
-   * @param text The text to turn into words
-   * @param regex The pattern to apply to the text
-   * @param Calculator The calculator to use
-   * @param uri The uri of the location
+   *
+   * @param text
+   * @param func
    */
-  export function ParseFromRegex(text: string | TextDocument, regex: RegExp, Calculator: PositionCalculator): RangedWord[] {
-    let Builder = new RangedWordBuilder(Calculator);
+  export function Parse(text: string | TextDocument, func: WordCreation): RangedWord[] {
+    let Calculator;
 
     if (typeof text !== "string") {
+      Calculator = PositionCalculator.Wrap(text);
       text = text.getText();
+    } else {
+      Calculator = PositionCalculator.Create(text);
     }
 
-    RegularExpression.CreateWords(text, regex, Builder);
-    return Builder.BuildFinal();
-  }
-
-  /**
-   *Parses words from the given data
-   * @param doc The text document to parse
-   * @param regex The pattern to apply to the text
-   */
-  export function ParseFromRegexDoc(doc: TextDocument, regex: RegExp): RangedWord[] {
-    let Calculator: PositionCalculator = PositionCalculator.Wrap(doc);
     let Builder = new RangedWordBuilder(Calculator);
-    let text = doc.getText();
 
-    RegularExpression.CreateWords(text, regex, Builder);
+    WordCreation.Execute(text, Builder, func);
     return Builder.BuildFinal();
   }
 
   /**
-   *Parses words from the given data
-   * @param doc The text document to parse
-   * @param wordcreation The function that will create words and adds them into the builder
+   *
+   * @param text
+   * @param func
    */
-  export function Parse(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): RangedWord[] {
-    let Builder = new RangedWordBuilder(PositionCalculator.Wrap(doc));
+  export function ParseRange(text: string | TextDocument, startindex: number, endindex: number, func: WordCreation): RangedWord[] {
+    let Calculator;
 
-    let text = doc.getText();
-    wordcreation(text, Builder);
+    if (typeof text !== "string") {
+      Calculator = PositionCalculator.Wrap(text);
+      text = text.getText();
+    } else {
+      Calculator = PositionCalculator.Create(text);
+    }
+
+    let Builder = new RangedWordBuilder(Calculator);
+
+    WordCreation.ExecuteRange(text, startindex, endindex, Builder, func);
     return Builder.BuildFinal();
   }
 }

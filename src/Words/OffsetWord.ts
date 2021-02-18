@@ -31,6 +31,8 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { IBaseWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
 import { IWord } from "./Interfaces/IWord";
 import { RegularExpression } from "../RegularExpression/CreateWords";
+import { WordCreation } from "./Creation";
+import { PositionCalculator } from "../Position/include";
 
 export class OffsetWord implements IWord {
   /**The text of the word*/
@@ -69,33 +71,34 @@ export class OffsetWordBuilder implements IWordBuilder<OffsetWord> {
 
 export namespace OffsetWord {
   /**
-   *Parses words from the given data
-   * @param text The text to turn into words
-   * @param regex The pattern to apply to the text
-   * @param Calculator The calculator to use
-   * @param uri The uri of the location
+   *
+   * @param text
+   * @param func
    */
-  export function ParseFromRegex(text: string | TextDocument, regex: RegExp, offset: number = 0): OffsetWord[] {
-    let Builder = new OffsetWordBuilder(offset);
-
+  export function Parse(text: string | TextDocument, func: WordCreation): OffsetWord[] {
     if (typeof text !== "string") {
       text = text.getText();
     }
 
-    RegularExpression.CreateWords(text, regex, Builder);
+    let Builder = new OffsetWordBuilder();
+
+    WordCreation.Execute(text, Builder, func);
     return Builder.BuildFinal();
   }
 
   /**
-   *Parses words from the given data
-   * @param doc The text document to parse
-   * @param wordcreation The function that will create words and adds them into the builder
+   *
+   * @param text
+   * @param func
    */
-  export function Parse(doc: TextDocument, wordcreation: (text: string, builder: IBaseWordBuilder) => void): OffsetWord[] {
+  export function ParseRange(text: string | TextDocument, startindex: number, endindex: number, func: WordCreation): OffsetWord[] {
+    if (typeof text !== "string") {
+      text = text.getText();
+    }
+
     let Builder = new OffsetWordBuilder();
 
-    let text = doc.getText();
-    wordcreation(text, Builder);
+    WordCreation.ExecuteRange(text, startindex, endindex, Builder, func);
     return Builder.BuildFinal();
   }
 }
