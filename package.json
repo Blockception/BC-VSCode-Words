@@ -1,6 +1,6 @@
 {
   "name": "bc-vscode-words",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "The lexical analyzers basics used for analyzing code from VSCode documents",
   "main": "./lib/src/main.js",
   "types": "./lib/src/main.d.ts",
