@@ -3,4 +3,4 @@ tsconfig.json
 tslint.json
 .prettierrc
 test/
-out/**/test/
+lib/**
