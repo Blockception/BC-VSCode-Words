@@ -28,11 +28,9 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 import { TextDocument } from "vscode-languageserver-textdocument";
-import { IBaseWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
+import { IWordBuilder } from "./Interfaces/IBuilder";
 import { IWord } from "./Interfaces/IWord";
-import { RegularExpression } from "../RegularExpression/CreateWords";
 import { WordCreation } from "./Creation";
-import { PositionCalculator } from "../Position/include";
 
 export class OffsetWord implements IWord {
   /**The text of the word*/
@@ -75,12 +73,12 @@ export namespace OffsetWord {
    * @param text
    * @param func
    */
-  export function Parse(text: string | TextDocument, func: WordCreation): OffsetWord[] {
+  export function Parse(text: string | TextDocument, func: WordCreation, offset: number = 0): OffsetWord[] {
     if (typeof text !== "string") {
       text = text.getText();
     }
 
-    let Builder = new OffsetWordBuilder();
+    let Builder = new OffsetWordBuilder(offset);
 
     WordCreation.Execute(text, Builder, func);
     return Builder.BuildFinal();
@@ -91,12 +89,12 @@ export namespace OffsetWord {
    * @param text
    * @param func
    */
-  export function ParseRange(text: string | TextDocument, startindex: number, endindex: number, func: WordCreation): OffsetWord[] {
+  export function ParseRange(text: string | TextDocument, startindex: number, endindex: number, func: WordCreation, offset: number = 0): OffsetWord[] {
     if (typeof text !== "string") {
       text = text.getText();
     }
 
-    let Builder = new OffsetWordBuilder();
+    let Builder = new OffsetWordBuilder(offset);
 
     WordCreation.ExecuteRange(text, startindex, endindex, Builder, func);
     return Builder.BuildFinal();
