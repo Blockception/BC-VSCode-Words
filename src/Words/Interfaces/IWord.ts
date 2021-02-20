@@ -35,3 +35,17 @@ export interface IWord {
   /**The text of the word*/
   text: string;
 }
+
+export namespace IWord {
+  /**
+   *Checks if the given object is a IWord atleast
+   * @param value The object to check
+   */
+  export function is(value: any): value is IWord {
+    if (value) {
+      if (value.text && typeof value.text === "string") return true;
+    }
+
+    return false;
+  }
+}
