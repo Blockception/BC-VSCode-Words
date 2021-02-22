@@ -90,6 +90,16 @@ export class LocationWordBuilder implements IWordBuilder<LocationWord>, IRangeWo
 }
 
 export namespace LocationWord {
+  export function is(value: any): value is LocationWord {
+    if (value) {
+      let temp = value as LocationWord;
+
+      if (temp.text && temp.location && Location.is(temp.location)) return true;
+    }
+
+    return false;
+  }
+
   export namespace Document {
     /**
      *

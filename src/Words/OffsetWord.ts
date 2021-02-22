@@ -68,6 +68,16 @@ export class OffsetWordBuilder implements IWordBuilder<OffsetWord> {
 }
 
 export namespace OffsetWord {
+  export function is(value: any): value is OffsetWord {
+    if (value) {
+      let temp = value as OffsetWord;
+
+      if (temp.text && temp.offset) return true;
+    }
+
+    return false;
+  }
+
   /**
    *
    * @param text

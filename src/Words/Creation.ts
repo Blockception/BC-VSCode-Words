@@ -30,11 +30,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 import { RegularExpression } from "../RegularExpression/include";
 import { IBaseWordBuilder } from "./Interfaces/include";
 
+/**A function declaration that targets the converts the entire string into words*/
 export type FullWordCreation = (text: string, Builder: IBaseWordBuilder) => void;
+/**A function declaration that targets the converts the specified section of the string into words*/
 export type RangeWordCreation = (text: string, startoffset: number, endindex: number, Builder: IBaseWordBuilder) => void;
+/**A type of 3 kinds of word creation methods*/
 export type WordCreation = RangeWordCreation | FullWordCreation | RegExp;
 
+/**The namespace that adds functionality to type FullWordCreation*/
 export namespace FullWordCreation {
+  /**Checks if the given object is of type FullWordCreation*/
   export function is(value: any): value is FullWordCreation {
     if (value) {
       let temp = value as FullWordCreation;
@@ -46,7 +51,9 @@ export namespace FullWordCreation {
   }
 }
 
+/**The namespace that adds functionality to type RangeWordCreation*/
 export namespace RangeWordCreation {
+  /**Checks if the given object is of type RangeWordCreation*/
   export function is(value: any): value is RangeWordCreation {
     if (value) {
       let temp = value as RangeWordCreation;
@@ -58,7 +65,9 @@ export namespace RangeWordCreation {
   }
 }
 
+/**The namespace that adds functionality to type WordCreation*/
 export namespace WordCreation {
+  /**Checks cheaply if the given object is of type FullWordCreation*/
   export function isFull(func: WordCreation): func is FullWordCreation {
     if (func) {
       let temp = func as FullWordCreation;
@@ -68,6 +77,7 @@ export namespace WordCreation {
     return false;
   }
 
+  /**Checks cheaply if the given object is of type RangeWordCreation*/
   export function isRange(func: WordCreation): func is RangeWordCreation {
     if (func) {
       let temp = func as RangeWordCreation;
@@ -77,12 +87,19 @@ export namespace WordCreation {
     return false;
   }
 
+  /**Checks if the given object is neither of type: FullWordCreation or RangeWordCreation*/
   export function isRegex(func: WordCreation): func is RegExp {
     if (!isFull(func) && !isRange(func)) return true;
 
     return false;
   }
 
+  /**
+   * Execute the given Wordcreation with the specified information, for ranged it will use the range of the entire string
+   * @param text The text to process
+   * @param Builder The builder needed to process
+   * @param func The function to execute
+   */
   export function Execute(text: string, Builder: IBaseWordBuilder, func: WordCreation) {
     if (WordCreation.isFull(func)) {
       func(text, Builder);
@@ -93,6 +110,14 @@ export namespace WordCreation {
     }
   }
 
+  /**
+   * Execute the given Wordcreation with the specified information.
+   * @param text The text to process
+   * @param startindex The possible startindex in the text
+   * @param endindex The possible endindex in the text
+   * @param Builder The builder needed to process
+   * @param func The function to execute
+   */
   export function ExecuteRange(text: string, startindex: number, endindex: number, Builder: IBaseWordBuilder, func: WordCreation) {
     if (WordCreation.isFull(func)) {
       func(text, Builder);

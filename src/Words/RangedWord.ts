@@ -79,6 +79,16 @@ export class RangedWordBuilder implements IWordBuilder<RangedWord>, IRangeWordBu
 }
 
 export namespace RangedWord {
+  export function is(value: any): value is RangedWord {
+    if (value) {
+      let temp = value as RangedWord;
+
+      if (temp.text && temp.range && temp.range.start && temp.range.end) return true;
+    }
+
+    return false;
+  }
+
   /**
    *
    * @param text
