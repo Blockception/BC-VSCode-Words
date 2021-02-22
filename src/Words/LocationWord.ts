@@ -28,11 +28,10 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 import { Location } from "vscode-languageserver";
-import { Range, TextDocument } from "vscode-languageserver-textdocument";
+import { Position, Range, TextDocument } from "vscode-languageserver-textdocument";
 import { PositionCalculator } from "../Position/include";
-import { IBaseWordBuilder, IRangeWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
+import { IRangeWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
 import { IWord } from "./Interfaces/IWord";
-import { RegularExpression } from "../RegularExpression/CreateWords";
 import { WordCreation } from "./Creation";
 
 /**
@@ -57,11 +56,15 @@ export class LocationWordBuilder implements IWordBuilder<LocationWord>, IRangeWo
   private Words: LocationWord[];
   private Calculator: PositionCalculator;
   private uri: string;
+  private LineStart: number;
+  private CharacterStart: number;
 
-  constructor(Calculator: PositionCalculator, uri: string) {
+  constructor(Calculator: PositionCalculator, uri: string, LineStart: number = 0, CharacterStart: number = 0) {
     this.Words = [];
     this.Calculator = Calculator;
     this.uri = uri;
+    this.LineStart = LineStart;
+    this.CharacterStart = CharacterStart;
   }
 
   /**
@@ -71,6 +74,14 @@ export class LocationWordBuilder implements IWordBuilder<LocationWord>, IRangeWo
    */
   Add(text: string, offset: number): void {
     let range = this.Calculator.rangeOf(offset, offset + text.length);
+
+    if (range.start.line === 0) {
+      range.start.character += this.CharacterStart;
+    }
+
+    range.start.line += this.LineStart;
+    range.end.line += this.LineStart;
+
     this.Words.push(new LocationWord(text, this.uri, range));
   }
 
@@ -140,10 +151,18 @@ export namespace LocationWord {
      * @param doc
      * @param func
      */
-    export function Parse(text: string, uri: string, func: WordCreation): LocationWord[] {
+    export function Parse(text: string, uri: string, func: WordCreation, StartAt: Position | undefined = undefined): LocationWord[] {
       let Calculator = PositionCalculator.Create(text);
 
-      let Builder = new LocationWordBuilder(Calculator, uri);
+      let SL: number = 0;
+      let SC: number = 0;
+
+      if (StartAt) {
+        SL = StartAt.character;
+        SC = StartAt.line;
+      }
+
+      let Builder = new LocationWordBuilder(Calculator, uri, SL, SC);
 
       WordCreation.Execute(text, Builder, func);
       return Builder.BuildFinal();
@@ -154,10 +173,18 @@ export namespace LocationWord {
      * @param text
      * @param func
      */
-    export function ParseRange(text: string, uri: string, startindex: number, endindex: number, func: WordCreation): LocationWord[] {
+    export function ParseRange(text: string, uri: string, startindex: number, endindex: number, func: WordCreation, StartAt: Position | undefined = undefined): LocationWord[] {
       let Calculator = PositionCalculator.Create(text);
 
-      let Builder = new LocationWordBuilder(Calculator, uri);
+      let SL: number = 0;
+      let SC: number = 0;
+
+      if (StartAt) {
+        SL = StartAt.character;
+        SC = StartAt.line;
+      }
+
+      let Builder = new LocationWordBuilder(Calculator, uri, SL, SC);
       WordCreation.ExecuteRange(text, startindex, endindex, Builder, func);
       return Builder.BuildFinal();
     }

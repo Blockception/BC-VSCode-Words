@@ -27,7 +27,7 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
-import { Range, TextDocument } from "vscode-languageserver-textdocument";
+import { Position, Range, TextDocument } from "vscode-languageserver-textdocument";
 import { PositionCalculator } from "../Position/include";
 import { IRangeWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
 import { IWord } from "./Interfaces/IWord";
@@ -47,10 +47,14 @@ export class RangedWord implements IWord {
 export class RangedWordBuilder implements IWordBuilder<RangedWord>, IRangeWordBuilder {
   private Words: RangedWord[];
   private Calculator: PositionCalculator;
+  private LineStart: number;
+  private CharacterStart: number;
 
-  constructor(Calculator: PositionCalculator) {
+  constructor(Calculator: PositionCalculator, LineStart: number = 0, CharacterStart: number = 0) {
     this.Words = [];
     this.Calculator = Calculator;
+    this.LineStart = LineStart;
+    this.CharacterStart = CharacterStart;
   }
 
   /**
@@ -60,6 +64,14 @@ export class RangedWordBuilder implements IWordBuilder<RangedWord>, IRangeWordBu
    */
   Add(text: string, offset: number): void {
     let range = this.Calculator.rangeOf(offset, offset + text.length);
+
+    if (range.start.line === 0) {
+      range.start.character += this.CharacterStart;
+    }
+
+    range.start.line += this.LineStart;
+    range.end.line += this.LineStart;
+
     this.Words.push(new RangedWord(text, range));
   }
 
@@ -94,7 +106,7 @@ export namespace RangedWord {
    * @param text
    * @param func
    */
-  export function Parse(text: string | TextDocument, func: WordCreation): RangedWord[] {
+  export function Parse(text: string | TextDocument, func: WordCreation, Offset: Position | undefined = undefined): RangedWord[] {
     let Calculator;
 
     if (typeof text !== "string") {
@@ -115,7 +127,7 @@ export namespace RangedWord {
    * @param text
    * @param func
    */
-  export function ParseRange(text: string | TextDocument, startindex: number, endindex: number, func: WordCreation): RangedWord[] {
+  export function ParseRange(text: string | TextDocument, startindex: number, endindex: number, func: WordCreation, Offset: Position | undefined = undefined): RangedWord[] {
     let Calculator;
 
     if (typeof text !== "string") {
