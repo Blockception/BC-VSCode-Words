@@ -1,6 +1,6 @@
 {
   "name": "bc-vscode-words",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "The lexical analyzers basics used for analyzing code from VSCode documents",
   "main": "./lib/src/main.js",
   "types": "./lib/src/main.d.ts",
@@ -41,8 +41,8 @@
     "vscode-languageserver-textdocument": "^1.0.1"
   },
   "devDependencies": {
-    "@types/mocha": "^8.0.4",
-    "@types/node": "^10.12.21",
+    "@types/mocha": "^8.2.1",
+    "@types/node": "^10.17.54",
     "mocha": "^8.3.0",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
