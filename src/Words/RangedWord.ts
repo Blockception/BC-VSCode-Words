@@ -106,7 +106,7 @@ export namespace RangedWord {
    * @param text
    * @param func
    */
-  export function Parse(text: string | TextDocument, func: WordCreation, Offset: Position | undefined = undefined): RangedWord[] {
+  export function Parse(text: string | TextDocument, func: WordCreation, StartAt: Position | undefined = undefined): RangedWord[] {
     let Calculator;
 
     if (typeof text !== "string") {
@@ -116,7 +116,15 @@ export namespace RangedWord {
       Calculator = PositionCalculator.Create(text);
     }
 
-    let Builder = new RangedWordBuilder(Calculator);
+    let SL: number = 0;
+    let SC: number = 0;
+
+    if (StartAt) {
+      SL = StartAt.line;
+      SC = StartAt.character;
+    }
+
+    let Builder = new RangedWordBuilder(Calculator, SL, SC);
 
     WordCreation.Execute(text, Builder, func);
     return Builder.BuildFinal();
@@ -127,7 +135,7 @@ export namespace RangedWord {
    * @param text
    * @param func
    */
-  export function ParseRange(text: string | TextDocument, startindex: number, endindex: number, func: WordCreation, Offset: Position | undefined = undefined): RangedWord[] {
+  export function ParseRange(text: string | TextDocument, startindex: number, endindex: number, func: WordCreation, StartAt: Position | undefined = undefined): RangedWord[] {
     let Calculator;
 
     if (typeof text !== "string") {
@@ -137,7 +145,15 @@ export namespace RangedWord {
       Calculator = PositionCalculator.Create(text);
     }
 
-    let Builder = new RangedWordBuilder(Calculator);
+    let SL: number = 0;
+    let SC: number = 0;
+
+    if (StartAt) {
+      SL = StartAt.line;
+      SC = StartAt.character;
+    }
+
+    let Builder = new RangedWordBuilder(Calculator, SL, SC);
 
     WordCreation.ExecuteRange(text, startindex, endindex, Builder, func);
     return Builder.BuildFinal();

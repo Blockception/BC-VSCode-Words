@@ -158,8 +158,8 @@ export namespace LocationWord {
       let SC: number = 0;
 
       if (StartAt) {
-        SL = StartAt.character;
-        SC = StartAt.line;
+        SL = StartAt.line;
+        SC = StartAt.character;
       }
 
       let Builder = new LocationWordBuilder(Calculator, uri, SL, SC);
@@ -180,8 +180,8 @@ export namespace LocationWord {
       let SC: number = 0;
 
       if (StartAt) {
-        SL = StartAt.character;
-        SC = StartAt.line;
+        SL = StartAt.line;
+        SC = StartAt.character;
       }
 
       let Builder = new LocationWordBuilder(Calculator, uri, SL, SC);
