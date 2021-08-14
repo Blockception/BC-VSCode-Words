@@ -3,12 +3,8 @@
 [![Npm Package & Publish](https://github.com/Blockception/BC-VSCode-Words/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/Blockception/BC-VSCode-Words/actions/workflows/npm-publish.yml)
 [![Npm Test](https://github.com/Blockception/BC-VSCode-Words/actions/workflows/npm-test.yml/badge.svg)](https://github.com/Blockception/BC-VSCode-Words/actions/workflows/npm-test.yml)
 [![tagged-release](https://github.com/Blockception/BC-VSCode-Words/actions/workflows/tagged-release.yml/badge.svg)](https://github.com/Blockception/BC-VSCode-Words/actions/workflows/tagged-release.yml)
-<p align="center">
-  <a href="https://www.npmjs.com/package/bc-vscode-words">
-  	<img alt="npm" src="https://img.shields.io/npm/v/bc-vscode-words">
-		<img alt="npm" src="https://img.shields.io/npm/dt/bc-vscode-words">
-  </a>
-</p>
+<img alt="npm" src="https://img.shields.io/npm/v/bc-vscode-words">
+<img alt="npm" src="https://img.shields.io/npm/dt/bc-vscode-words">
 
 The lexical analyzers basics used for analyzing code from VSCode documents
 
