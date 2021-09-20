@@ -66,13 +66,18 @@ export class OffsetWordBuilder implements IWordBuilder<OffsetWord> {
     return this.Words;
   }
 }
-
+/**
+ *
+ */
 export namespace OffsetWord {
+  /**
+   *
+   * @param value
+   * @returns
+   */
   export function is(value: any): value is OffsetWord {
-    if (value) {
-      let temp = value as OffsetWord;
-
-      if (temp.text && temp.offset) return true;
+    if (typeof value === "object") {
+      if (typeof value.text === "string" && typeof value.offset === "number") return true;
     }
 
     return false;

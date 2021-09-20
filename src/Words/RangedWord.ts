@@ -33,9 +33,11 @@ import { IRangeWordBuilder, IWordBuilder } from "./Interfaces/IBuilder";
 import { IWord } from "./Interfaces/IWord";
 import { WordCreation } from "./Creation";
 
+/** */
 export class RangedWord implements IWord {
   /**The text of the word*/
   public text: string;
+  /** */
   public range: Range;
 
   constructor(text: string, range: Range) {
@@ -90,12 +92,18 @@ export class RangedWordBuilder implements IWordBuilder<RangedWord>, IRangeWordBu
   }
 }
 
+/**
+ *
+ */
 export namespace RangedWord {
+  /**
+   *
+   * @param value
+   * @returns
+   */
   export function is(value: any): value is RangedWord {
-    if (value) {
-      let temp = value as RangedWord;
-
-      if (temp.text && temp.range && temp.range.start && temp.range.end) return true;
+    if (typeof value === "object") {
+      if (typeof value.text === "string" && typeof value.range === "object") return true;
     }
 
     return false;
