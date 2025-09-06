@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es2019",
-    "module": "commonjs",
+    "target": "es2024",
+    "module": "node16",
+    "moduleResolution": "node16",
     "declaration": true,
     "outDir": "./lib",
     "strict": true
   },
-  "include": ["./src", "./test"],
-  "exclude": ["node_modules", "**/__tests__/*"]
+  "include": [
+    "./src",
+    "./test"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/__tests__/*"
+  ]
 }
